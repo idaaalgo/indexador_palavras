@@ -14,13 +14,10 @@ import entities.BinarySearchTree;
 public class App {
 
     public static String removeAccentsAndSpecialCharacters(String word) {
-        // Normalize the string to decompose accented characters into their base characters
         String normalized = Normalizer.normalize(word, Normalizer.Form.NFD);
-        // Use a regex to remove all non-ASCII characters (which includes the accent marks)
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         String cleaned = pattern.matcher(normalized).replaceAll("");
-        // Remove any remaining special characters
-        cleaned = cleaned.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}\\s]", ""); // Allow spaces
+        cleaned = cleaned.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}\\s]", "");
         return cleaned.toLowerCase();
     }
 
@@ -82,7 +79,7 @@ public class App {
                 case 1:
                     console.printf("Digite a palavra que deseja adicionar: ");
                     String inputLine = console.readLine().trim();
-                    String[] inputWords = removeAccentsAndSpecialCharacters(inputLine).split("\\s+"); // Split into separate words
+                    String[] inputWords = removeAccentsAndSpecialCharacters(inputLine).split("\\s+");
                     for (String newWord : inputWords) {
                         if (!newWord.isEmpty()) {
                             bst.insert(newWord);
@@ -104,8 +101,12 @@ public class App {
                     console.printf("Digite a palavra que deseja remover: ");
                     String removeWord = console.readLine().trim().toLowerCase();
                     removeWord = removeAccentsAndSpecialCharacters(removeWord);
-                    bst.remove(removeWord);
-                    console.printf("Palavra removida com sucesso!\n");
+                    if (bst.search(removeWord)) {
+                        console.printf("Palavra removida com sucesso!\n");
+                        bst.remove(removeWord);
+                    } else {
+                        console.printf("A palavra '%s' não está presente.\n", removeWord);
+                    }
                     break;
                 case 4:
                     console.printf("Digite a substring que deseja procurar: ");
